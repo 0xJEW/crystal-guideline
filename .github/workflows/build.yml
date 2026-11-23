@@ -32,19 +32,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # Android NDK via sdkmanager (fastest path on ubuntu-latest)
       - name: Set up Android SDK + NDK
         uses: android-actions/setup-android@v3
-
-      - name: Install NDK ${{ env.NDK_VERSION }}
-        run: sdkmanager "ndk;${{ env.NDK_VERSION }}"
+        with:
+          packages: 'ndk;${{ env.NDK_VERSION }}'
 
       - name: Install Ninja
-        run: sudo apt-get install -y ninja-build
+        run: sudo apt-get update && sudo apt-get install -y ninja-build
 
       - name: Configure cmake
         run: |
-          NDK_PATH="$ANDROID_SDK_ROOT/ndk/${{ env.NDK_VERSION }}"
+          NDK_PATH="${ANDROID_HOME}/ndk/${{ env.NDK_VERSION }}"
           cmake \
             -S jni/ \
             -B .build/ \
